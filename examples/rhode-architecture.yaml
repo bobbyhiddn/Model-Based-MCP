@@ -1,0 +1,336 @@
+canvas:
+  version: "2.0"
+  title: "Rhode — Ordinal Agent System"
+  networks:
+    # ===== ORDINAL HIERARCHY (Left column) =====
+    # Vertical tower showing L3→L0 levels with color-coded containers
+    - id: ordinal-levels
+      factories:
+        - id: ordinal-hierarchy
+          label: "Ordinal Level Hierarchy"
+          style:
+            border_color: "#585b70"
+            label_color: "#bac2de"
+          machines:
+            - id: level-3
+              label: "L3 — Oracle"
+              style:
+                border_color: "#f9e2af"
+                fill_color: "#45381a"
+                alpha: 100
+                label_color: "#f9e2af"
+              nodes:
+                - id: l3-oracle
+                  type: input
+                  x: 80
+                  y: 120
+                  width: 260
+                  height: 130
+                  content: "Human oracle (Micah). Answers L2→L3 escalations via Telegram."
+                  label: "Micah (Oracle)"
+                  outputs: [bus-monitor]
+
+            - id: level-2
+              label: "L2 — Orchestrator"
+              style:
+                border_color: "#cba6f7"
+                fill_color: "#2d1f45"
+                alpha: 100
+                label_color: "#cba6f7"
+              nodes:
+                - id: l2-rhode
+                  type: ai
+                  x: 80
+                  y: 440
+                  width: 260
+                  height: 130
+                  content: "Rhode agent loop. Owns task queue, makes oracle calls, routes decisions."
+                  label: "Rhode (Orchestrator)"
+                  outputs: [bus-monitor]
+
+            - id: level-1
+              label: "L1 — Subagents"
+              style:
+                border_color: "#89b4fa"
+                fill_color: "#1a2940"
+                alpha: 100
+                label_color: "#89b4fa"
+              nodes:
+                - id: l1-subagents
+                  type: process
+                  x: 80
+                  y: 760
+                  width: 260
+                  height: 130
+                  content: "Claude SDK Task tool workers. Spawned per-task, disposable."
+                  label: "Subagents (Task)"
+                  outputs: [bus-monitor]
+
+            - id: level-0
+              label: "L0 — Infrastructure"
+              style:
+                border_color: "#6c7086"
+                fill_color: "#1e1e2e"
+                alpha: 80
+                label_color: "#6c7086"
+              nodes:
+                - id: l0-infra
+                  type: default
+                  x: 80
+                  y: 1080
+                  width: 260
+                  height: 130
+                  content: "Filesystem, Podman/Incus containers, k3s cluster, systemd."
+                  label: "Infrastructure"
+                  style:
+                    border_color: "#6c7086"
+                    fill_color: "#1e1e2e"
+
+    # ===== CORE SYSTEM (Center columns) =====
+    - id: core
+      factories:
+        - id: entry-layer
+          label: "Entry & Interface"
+          style:
+            border_color: "#fab387"
+            label_color: "#fab387"
+          machines:
+            - id: entry-machine
+              label: "Startup & Comms"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#fab387"
+              nodes:
+                - id: main-py
+                  type: source
+                  x: 490
+                  y: 120
+                  width: 260
+                  height: 130
+                  content: "Service entry. Loads config, starts bot + agent + bus. Signal handling."
+                  label: "main.py"
+                  outputs: [rhode-bot, agent-runner, bus-monitor]
+                - id: rhode-bot
+                  type: input
+                  x: 900
+                  y: 120
+                  width: 260
+                  height: 130
+                  content: "Telegram interface. Messages, photos, inline buttons, oracle disambiguation."
+                  label: "RhodeBot (bot.py)"
+                  inputs: [main-py]
+                  outputs: [task-queue]
+
+        - id: processing-layer
+          label: "Task Processing"
+          style:
+            border_color: "#89b4fa"
+            label_color: "#89b4fa"
+          machines:
+            - id: queue-machine
+              label: "Queue & Execution"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#89b4fa"
+              nodes:
+                - id: task-queue
+                  type: static
+                  x: 490
+                  y: 440
+                  width: 260
+                  height: 130
+                  content: "SQLite-backed task persistence. Atomic claim, status tracking, history."
+                  label: "TaskQueue (queue.py)"
+                  inputs: [rhode-bot]
+                  outputs: [agent-runner]
+                - id: agent-runner
+                  type: ai
+                  x: 900
+                  y: 440
+                  width: 260
+                  height: 130
+                  content: "Claude SDK sessions (Opus 4.6). Streams results, manages tools + hooks."
+                  label: "AgentRunner (agent.py)"
+                  inputs: [task-queue, main-py]
+                  outputs: [guardrails, sandbox-mgr]
+
+        - id: safety-layer
+          label: "Safety & Isolation"
+          style:
+            border_color: "#f38ba8"
+            label_color: "#f38ba8"
+          machines:
+            - id: safety-machine
+              label: "Guardrails & Sandbox"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#f38ba8"
+              nodes:
+                - id: guardrails
+                  type: decision
+                  x: 490
+                  y: 760
+                  width: 260
+                  height: 130
+                  content: "Classifies bash commands. Risky ops get Telegram approval buttons."
+                  label: "Guardrails"
+                  inputs: [agent-runner]
+                - id: sandbox-mgr
+                  type: process
+                  x: 900
+                  y: 760
+                  width: 260
+                  height: 130
+                  content: "Podman containers or Incus VMs. Network-isolated, resource-limited."
+                  label: "SandboxManager"
+                  inputs: [agent-runner]
+
+        - id: bus-layer
+          label: "Oracle Bus"
+          style:
+            border_color: "#a6e3a1"
+            label_color: "#a6e3a1"
+          machines:
+            - id: bus-machine
+              label: "Bus & Routing"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#a6e3a1"
+              nodes:
+                - id: bus-monitor
+                  type: process
+                  x: 490
+                  y: 1080
+                  width: 260
+                  height: 130
+                  content: "Polls ~/.rhode/bus/ every 3s. Routes by ordinal level (L1→L2 or L2→L3)."
+                  label: "BusMonitor (bus.py)"
+                  inputs: [main-py, l3-oracle, l2-rhode, l1-subagents]
+                  outputs: [oracle-handler]
+                - id: oracle-handler
+                  type: ai
+                  x: 900
+                  y: 1080
+                  width: 260
+                  height: 130
+                  content: "L1→L2: Sonnet answers immediately. L2→L3: relayed to Micah via Telegram."
+                  label: "OracleHandler"
+                  inputs: [bus-monitor]
+
+    # ===== EXTERNAL INTEGRATIONS (Right column) =====
+    - id: external
+      factories:
+        - id: integrations
+          label: "External Integrations"
+          style:
+            border_color: "#74c7ec"
+            label_color: "#74c7ec"
+          machines:
+            - id: apis
+              label: "APIs & Services"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#74c7ec"
+              nodes:
+                - id: telegram-api
+                  type: input
+                  x: 1310
+                  y: 120
+                  width: 260
+                  height: 130
+                  content: "Telegram Bot API. Bidirectional text, photos, inline buttons."
+                  label: "Telegram API"
+                  inputs: [rhode-bot]
+                - id: claude-sdk
+                  type: ai
+                  x: 1310
+                  y: 440
+                  width: 260
+                  height: 130
+                  content: "Anthropic Claude SDK. Opus 4.6 for Rhode, Sonnet for L1 orchestrator."
+                  label: "Claude SDK (Opus 4.6)"
+                  inputs: [agent-runner]
+                - id: mcp-servers
+                  type: source
+                  x: 1310
+                  y: 760
+                  width: 260
+                  height: 130
+                  content: "Ordinal-MCP (bus), Canvas-MCP (diagrams), Pandoc-MCP, more."
+                  label: "MCP Servers"
+                  inputs: [agent-runner]
+                - id: github-cli
+                  type: source
+                  x: 1310
+                  y: 1080
+                  width: 260
+                  height: 130
+                  content: "gh CLI — PRs, issues, repo management. Authenticated as bobbyhiddn."
+                  label: "GitHub (gh CLI)"
+                  inputs: [agent-runner]
+
+    # ===== PERSISTENT STATE (Bottom row) =====
+    - id: state
+      factories:
+        - id: storage
+          label: "Persistent State (~/.rhode/)"
+          style:
+            border_color: "#a6e3a1"
+            fill_color: "#1a2e1a"
+            label_color: "#a6e3a1"
+            alpha: 40
+          machines:
+            - id: data-stores
+              label: "Data Files"
+              style:
+                border_color: "#45475a"
+                fill_color: "#181825"
+                alpha: 120
+                label_color: "#a6e3a1"
+              nodes:
+                - id: rhode-db
+                  type: static
+                  x: 80
+                  y: 1460
+                  width: 260
+                  height: 110
+                  content: "SQLite task persistence and history."
+                  label: "rhode.db"
+                  inputs: [task-queue]
+                - id: memory-md
+                  type: static
+                  x: 490
+                  y: 1460
+                  width: 260
+                  height: 110
+                  content: "Accumulated lessons, preferences, gotchas."
+                  label: "memory.md"
+                  inputs: [agent-runner]
+                - id: bus-dir
+                  type: static
+                  x: 900
+                  y: 1460
+                  width: 260
+                  height: 110
+                  content: "requests/, responses/, history/ — file-based oracle IPC."
+                  label: "bus/"
+                  inputs: [bus-monitor]
+                - id: reboot-json
+                  type: static
+                  x: 1310
+                  y: 1460
+                  width: 260
+                  height: 110
+                  content: "One-shot prompt for session continuity across restarts."
+                  label: "reboot_prompt.json"
+                  inputs: [agent-runner]

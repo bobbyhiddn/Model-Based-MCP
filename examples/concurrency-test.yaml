@@ -1,0 +1,349 @@
+canvas:
+  version: "2.0"
+  created: 1757970423701
+  networks:
+    - id: network-4
+      factories:
+        - id: factory-2
+          machines:
+            - id: machine-1
+              nodes:
+                - id: node-1
+                  type: static
+                  x: -1200
+                  y: 300
+                  content: "Project: New mobile app launch. Timeline: 3 months. Team: 5
+                    developers, 2 designers. Budget: $500K. Status: Design 80%
+                    complete, Development 30% complete, 6 weeks remaining."
+                  outputs:
+                    - node-2
+                - id: node-2
+                  type: input
+                  x: -800
+                  y: 300
+                  content: Identify the top 3 risks in this project based on the current status
+                  inputs:
+                    - node-1
+                  outputs:
+                    - node-3
+                - id: node-3
+                  type: ai
+                  x: -400
+                  y: 300
+                  content: >-
+                    1. Schedule Slippage: With only 6 weeks remaining in a
+                    3-month timeline, the project is at its halfway point, but
+                    development is only 30% complete. This indicates a
+                    significant deviation from the planned velocity, making it
+                    highly likely the project will not be finished on time.
+
+                    2. Budget Overrun: If the schedule slips, the cost of the
+                    7-person team will extend beyond the planned 3-month
+                    timeline, consuming more than the allocated $500K budget.
+
+                    3. Scope Reduction: To meet the aggressive 6-week deadline,
+                    there is a high risk that features will need to be cut, as
+                    completing the remaining 70% of development in half the
+                    project's timeline is improbable. The fact that design is
+                    not yet 100% complete further complicates this.
+                  inputs:
+                    - node-2
+            - id: machine-2
+              nodes:
+                - id: node-4
+                  type: input
+                  x: 0
+                  y: 300
+                  content: For each risk identified, calculate probability (High/Medium/Low) and
+                    impact (Critical/Major/Minor)
+                  inputs:
+                    - machine-1
+                  outputs:
+                    - node-5
+                - id: node-5
+                  type: ai
+                  x: 400
+                  y: 300
+                  content: >-
+                    Risk 1: Schedule Slippage. The project is 50% through its
+                    timeline (6 of 12 weeks) but development is only 30%
+                    complete, indicating a high likelihood of missing the launch
+                    date.
+
+                    - Probability: High
+
+                    - Impact: Critical
+
+
+                    Risk 2: Budget Overrun. The schedule slippage will require
+                    developers and designers to be on the project longer than
+                    the planned 3 months, consuming the budget at an
+                    unsustainable rate.
+
+                    - Probability: High
+
+                    - Impact: Critical
+
+
+                    Risk 3: Rework due to Unfinished Design. With design at 80%
+                    completion, the final 20% could introduce changes that
+                    require modification to the 30% of development work already
+                    completed, causing further delays.
+
+                    - Probability: Medium
+
+                    - Impact: Major
+                  inputs:
+                    - node-4
+            - id: machine-3
+              nodes:
+                - id: node-6
+                  type: input
+                  x: 800
+                  y: 300
+                  content: Generate specific mitigation strategies for each risk
+                  inputs:
+                    - machine-2
+                  outputs:
+                    - node-7
+                - id: node-7
+                  type: ai
+                  x: 1200
+                  y: 300
+                  content: >-
+                    Risk 1: Schedule Slippage
+
+                    Probability: High
+
+                    Impact: Critical
+
+                    Mitigation Strategies: Immediately re-scope the project to a
+                    Minimum Viable Product (MVP) for the initial launch,
+                    deferring non-essential features to a post-launch update.
+                    Evaluate adding a contract developer to augment the team for
+                    the remainder of the project. Implement daily stand-up
+                    meetings to track progress on development tasks against the
+                    remaining 6-week timeline.
+
+
+                    Risk 2: Rework Due to Incomplete Design
+
+                    Probability: High
+
+                    Impact: Major
+
+                    Mitigation Strategies: Freeze the design scope immediately
+                    for the version 1 launch. Prioritize the completion of the
+                    remaining 20% of design work on core MVP features only.
+                    Embed designers with the development team to provide
+                    real-time clarification and prevent developers from working
+                    on assumptions.
+
+
+                    Risk 3: Poor Product Quality
+
+                    Probability: High
+
+                    Impact: Critical
+
+                    Mitigation Strategies: Protect time for quality assurance
+                    (QA) and bug-fixing cycles; do not sacrifice these for
+                    feature development. Automate testing where possible to
+                    speed up regression checks. Explicitly document any
+                    technical debt incurred to meet the deadline and create a
+                    plan to address it immediately after launch.
+                  inputs:
+                    - node-6
+        - id: factory-4
+          machines:
+            - id: machine-4
+              nodes:
+                - id: node-8
+                  type: input
+                  x: 1681.8966464322025
+                  y: 182.02268736854091
+                  content: Create a go/no-go recommendation based on the risk analysis
+                  inputs:
+                    - factory-2
+                  outputs:
+                    - node-9
+                - id: node-9
+                  type: ai
+                  x: 2011.7456254932963
+                  y: -109.10222974039867
+                  content: >-
+                    Risk 1: Significant Schedule Slippage
+
+                    Probability: High
+
+                    Impact: Critical
+
+                    Mitigation Strategy: Immediately re-scope the project to a
+                    Minimum Viable Product (MVP) for the initial launch. Defer
+                    all non-essential features to a post-launch update.
+                    Prioritize the remaining feature list and focus development
+                    efforts exclusively on the core "must-have" functionality
+                    required for launch. Authorize targeted overtime for the
+                    development team on critical path items.
+
+
+                    Risk 2: Budget Overrun
+
+                    Probability: High
+
+                    Impact: Major
+
+                    Mitigation Strategy: Implement the MVP re-scoping to reduce
+                    the total work hours required. Institute a strict change
+                    control process requiring stakeholder sign-off for any
+                    change that impacts cost or timeline. Re-forecast the budget
+                    to completion based on the current velocity and communicate
+                    the expected overrun to stakeholders proactively.
+
+
+                    Risk 3: Incomplete Design Causing Rework
+
+                    Probability: Medium
+
+                    Impact: Major
+
+                    Mitigation Strategy: Freeze the current design scope. Any
+                    feature not 100% designed is automatically moved to the
+                    post-launch backlog. Ensure the two designers remain fully
+                    allocated to the project to provide immediate clarification
+                    and support to the development team, preventing them from
+                    becoming a bottleneck.
+
+
+                    Recommendation: Conditional Go. The project should proceed
+                    only if the mitigation strategies, particularly the
+                    aggressive re-scoping to an MVP and a feature freeze, are
+                    implemented immediately. Continuing on the current path
+                    presents a near-certain risk of failure to meet the timeline
+                    and budget.
+                  inputs:
+                    - node-8
+            - id: machine-5
+              nodes:
+                - id: node-10
+                  type: input
+                  x: 1610.5225867324211
+                  y: 1020.8326172128474
+                  content: Generate an executive summary for stakeholders
+                  inputs:
+                    - factory-2
+                  outputs:
+                    - node-11
+                - id: node-11
+                  type: ai
+                  x: 2075.411428859586
+                  y: 1234.791818987846
+                  content: >-
+                    Top 3 Risks
+
+
+                    Risk 1: Schedule Slippage
+
+                    Probability: High
+
+                    Impact: Critical
+
+                    Description: At the 50% point of the 3-month timeline (6
+                    weeks remaining), development is only 30% complete. This
+                    indicates a significant deviation from the planned velocity,
+                    making the original launch date highly unlikely without
+                    intervention.
+
+                    Mitigation Strategies:
+
+                    1. Immediately de-scope the launch to a Minimum Viable
+                    Product (MVP) by re-prioritizing the feature backlog with
+                    stakeholders.
+
+                    2. Augment the development team with contract resources to
+                    increase capacity and parallelize workstreams.
+
+                    3. Implement daily stand-up meetings focused exclusively on
+                    identifying and removing development blockers to accelerate
+                    progress.
+
+
+                    Risk 2: Budget Overrun
+
+                    Probability: High
+
+                    Impact: Critical
+
+                    Description: The current development delay directly
+                    threatens the $500K budget. Any schedule extension or
+                    addition of resources to meet the deadline will incur costs
+                    beyond the initial plan.
+
+                    Mitigation Strategies:
+
+                    1. Enforce a strict scope freeze on the defined MVP to
+                    prevent any new work that would increase time and cost.
+
+                    2. Re-forecast the budget based on the work required to
+                    complete the MVP and present the updated financial outlook
+                    to stakeholders immediately.
+
+                    3. Reduce non-personnel costs by reviewing all
+                    subscriptions, tools, and third-party services for potential
+                    savings.
+
+
+                    Risk 3: Design Rework and Integration Bottlenecks
+
+                    Probability: Medium
+
+                    Impact: Major
+
+                    Description: With design
+                  inputs:
+                    - node-10
+            - id: machine-6
+              nodes:
+                - id: node-12
+                  type: input
+                  x: 2625.4264611042586
+                  y: 676.1487554634759
+                  content: Compile into a single professional document.
+                  inputs:
+                    - machine-4
+                    - machine-5
+                  outputs:
+                    - node-13
+                - id: node-13
+                  type: ai
+                  x: 2976.549436872092
+                  y: 730.7678850273611
+                  content: >-
+                    **Project Risk Analysis & Recommendation Report: New Mobile
+                    App Launch**
+
+
+                    **1. Top 3 Project Risks**
+
+
+                    *   **Risk 1: Critical Schedule Slippage**
+                        *   Description: The project is 50% through its 3-month timeline (6 weeks remaining), but development is only 30% complete. There is a significant deviation from the planned velocity required to meet the launch date.
+                        *   Probability: High
+                        *   Impact: Critical
+
+                    *   **Risk 2: Implementation Complexity and Rework**
+                        *   Description: The disparity between design completion (80%) and development progress (30%) suggests a potential bottleneck. This could be due to unforeseen technical challenges in implementing the designs, leading to rework and further delays.
+                        *   Probability: High
+                        *   Impact: Major
+
+                    *   **Risk 3: Budget Overrun**
+                        *   Description: With a fixed budget of $500K, any significant extension of the project timeline to complete the remaining 70% of development work will lead to increased costs, primarily from team salary expenditures.
+                        *   Probability: High
+                        *   Impact: Critical
+
+                    **2. Mitigation Strategies**
+
+
+                    *   **For Risk 1 (Schedule
+                  inputs:
+                    - node-12

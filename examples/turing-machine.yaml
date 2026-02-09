@@ -1,0 +1,40 @@
+canvas:
+  version: "2.0"
+  created: 1757966026210
+  networks:
+    - id: network-1
+      machines:
+        - id: machine-1
+          nodes:
+            - id: node-1
+              type: pdf_file_source
+              x: -30.414335790361065
+              y: 136.62113416551915
+              file_path: C:\Users\mlmic\Downloads\Turings_Systems of Logic based on
+                Ordinals.pdf
+              outputs:
+                - node-2
+            - id: node-2
+              type: input
+              x: 344.11988072702775
+              y: 315.96753855762597
+              content: Please summarize this into a 1000 word doc
+              inputs:
+                - node-1
+                - node-4
+              outputs:
+                - node-3
+            - id: node-3
+              type: text_file_output
+              x: 830.4143357903611
+              y: 126.76972106765811
+              file_path: ./output/Turing_Summary.md
+              inputs:
+                - node-2
+            - id: node-4
+              type: text_file_source
+              x: 64.6878809465569
+              y: 473.230278932342
+              file_path: C:\Users\mlmic\Documents\Sync_Brain\Areas\Writing\Articles\The_Intuition_Engine\The_Intuition_Engine-Medium-Transcript.md
+              outputs:
+                - node-2

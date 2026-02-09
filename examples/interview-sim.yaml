@@ -1,0 +1,94 @@
+canvas:
+  version: "2.0"
+  created: 1757966219128
+  networks:
+    - id: factory-1
+      machines:
+        - id: machine-1
+          nodes:
+            - id: node-1
+              type: pdf_file_source
+              x: -298.9926847186391
+              y: -163.58716655445414
+              file_path: C:\Users\mlmic\Downloads\Micah_Longmire_Resume.pdf
+              outputs:
+                - node-2
+                - node-6
+            - id: node-2
+              type: input
+              x: 126.9263145363368
+              y: -206.35674546310292
+              content: Write two interview questions for this candidate
+              inputs:
+                - node-1
+              outputs:
+                - node-3
+            - id: node-3
+              type: ai
+              x: 676.8615461299108
+              y: -441.1604479740753
+              content: >-
+                1. You state that you led the architecture and accreditation of
+                a code-driven cloud environment from a blank repo to full
+                security approval. Can you walk me through the key architectural
+                decisions you made, the most significant security hurdles you
+                had to overcome, and how you managed the process to achieve
+                accreditation?
+
+
+                2. Your summary mentions treating complexity as a structure to
+                be understood, not avoided. Can you provide a specific example
+                of a complex technical or organizational problem you faced, and
+                how you applied this systems-thinking mindset to solve it at its
+                root?
+              inputs:
+                - node-2
+              outputs:
+                - node-4
+            - id: node-4
+              type: input
+              x: 1066.4411165287522
+              y: -46.34281737746437
+              content: How would you expect this candidate to answer the questions if they
+                were qualified for third position you suggested?
+              inputs:
+                - node-3
+                - node-5
+            - id: node-5
+              type: ai
+              x: 695.2353061700859
+              y: 85.31660991696162
+              content: Based on the provided information, an ideal position for this candidate
+                would be a Senior DevOps Engineer, DevOps Manager, or Lead
+                DevOps Engineer. The role should leverage their extensive
+                experience in leading teams, architecting enterprise-level
+                Infrastructure-as-Code (IaC) frameworks, and driving automation
+                in secure, cloud-based environments. A position that combines
+                hands-on technical leadership with mentoring, strategic
+                planning, and stakeholder communication would be a perfect
+                match, particularly given their proven ability to produce
+                high-quality technical demonstrations and documentation. Roles
+                within the defense or federal contracting sectors would be
+                particularly suitable, given their active Top-Secret security
+                clearance.
+              inputs:
+                - node-6
+              outputs:
+                - node-4
+            - id: node-6
+              type: input
+              x: 208.1723608195282
+              y: 58.77792379209154
+              content: What would be an ideal position for this candidate?
+              inputs:
+                - node-1
+              outputs:
+                - node-5
+      nodes:
+        - id: node-7
+          type: text_file_output
+          x: 1488.9769706459413
+          y: -82.8906888293966
+          file_path: ./output/Candidate.md
+          inputs:
+            - machine-1

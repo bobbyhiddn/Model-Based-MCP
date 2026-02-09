@@ -1,0 +1,225 @@
+network:
+  id: network-2
+  factories:
+    - id: factory-3
+      machines:
+        - id: machine-1
+          nodes:
+            - id: node-1
+              type: static
+              x: -2900
+              y: 300
+              content: "Seed: Objectives + constraints."
+              outputs:
+                - node-2
+            - id: node-2
+              type: input
+              x: -2600
+              y: 300
+              content: Refine objectives into measurable goals
+              inputs:
+                - node-1
+              outputs:
+                - node-3
+            - id: node-3
+              type: ai
+              x: -2300
+              y: 300
+              content: ""
+              inputs:
+                - node-2
+        - id: machine-2
+          nodes:
+            - id: node-4
+              type: input
+              x: -1800
+              y: -200
+              content: Identify risks from goals
+              inputs:
+                - machine-1
+              outputs:
+                - node-5
+            - id: node-5
+              type: ai
+              x: -1500
+              y: -200
+              content: ""
+              inputs:
+                - node-4
+        - id: machine-3
+          nodes:
+            - id: node-6
+              type: input
+              x: -1800
+              y: 800
+              content: Draft budget and resource plan from goals
+              inputs:
+                - machine-1
+              outputs:
+                - node-7
+            - id: node-7
+              type: ai
+              x: -1500
+              y: 800
+              content: ""
+              inputs:
+                - node-6
+        - id: machine-4
+          nodes:
+            - id: node-8
+              type: input
+              x: -1000
+              y: 300
+              content: Synthesize risks and budget into decision brief
+              inputs:
+                - machine-2
+                - machine-3
+              outputs:
+                - node-9
+            - id: node-9
+              type: ai
+              x: -700
+              y: 300
+              content: ""
+              inputs:
+                - node-8
+    - id: factory-4
+      machines:
+        - id: machine-5
+          nodes:
+            - id: node-10
+              type: input
+              x: -125.87567057630429
+              y: -231.58524672636446
+              content: Draft communications plan from decision brief and overall context
+              inputs:
+                - factory-3
+              outputs:
+                - node-11
+            - id: node-11
+              type: ai
+              x: 174.1243294236957
+              y: -231.58524672636446
+              content: ""
+              inputs:
+                - node-10
+        - id: machine-6
+          nodes:
+            - id: node-12
+              type: input
+              x: 474.1243294236957
+              y: 268.41475327363554
+              content: Create executive summary for stakeholders
+              inputs:
+                - factory-3
+                - machine-5
+              outputs:
+                - node-13
+            - id: node-13
+              type: ai
+              x: 774.1243294236957
+              y: 268.41475327363554
+              content: ""
+              inputs:
+                - node-12
+    - id: factory-8
+      machines:
+        - id: machine-7
+          nodes:
+            - id: node-14
+              type: input
+              x: 1429.6871592027776
+              y: 531.7833752851644
+              content: Produce QA strategy outline from local context
+              inputs:
+                - factory-4
+              outputs:
+                - node-15
+            - id: node-15
+              type: ai
+              x: 1729.6871592027776
+              y: 531.7833752851644
+              content: ""
+              inputs:
+                - node-14
+        - id: machine-8
+          nodes:
+            - id: node-16
+              type: static
+              x: 1602.5061741385607
+              y: -88.58697334133858
+              content: "Seed: Additional program context."
+              outputs:
+                - node-17
+            - id: node-17
+              type: input
+              x: 1902.5061741385607
+              y: -88.58697334133858
+              content: Integrate local seed with upstream QA
+              inputs:
+                - machine-7
+                - node-16
+              outputs:
+                - node-18
+            - id: node-18
+              type: ai
+              x: 2202.5061741385607
+              y: -88.58697334133858
+              content: ""
+              inputs:
+                - node-17
+        - id: machine-9
+          nodes:
+            - id: node-19
+              type: input
+              x: 2664.024733691918
+              y: -31.14427367991034
+              content: Identify risks from integrated context
+              inputs:
+                - machine-8
+              outputs:
+                - node-20
+            - id: node-20
+              type: ai
+              x: 2964.024733691918
+              y: -31.14427367991034
+              content: ""
+              inputs:
+                - node-19
+        - id: machine-10
+          nodes:
+            - id: node-21
+              type: input
+              x: 2602.1286077704394
+              y: 357.4426996614282
+              content: Draft budget from integrated context
+              inputs:
+                - machine-8
+              outputs:
+                - node-22
+            - id: node-22
+              type: ai
+              x: 2902.1286077704394
+              y: 357.4426996614282
+              content: ""
+              inputs:
+                - node-21
+        - id: machine-11
+          nodes:
+            - id: node-23
+              type: input
+              x: 3400
+              y: 300
+              content: Synthesize risks and budget (integrated)
+              inputs:
+                - machine-9
+                - machine-10
+              outputs:
+                - node-24
+            - id: node-24
+              type: ai
+              x: 3700
+              y: 300
+              content: ""
+              inputs:
+                - node-23

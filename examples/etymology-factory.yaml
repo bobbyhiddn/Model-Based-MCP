@@ -1,0 +1,151 @@
+canvas:
+  version: "2.0"
+  created: 1757892865828
+  networks:
+    - id: network-1
+      factories:
+        - id: factory-3
+          machines:
+            - id: machine-1
+              nodes:
+                - id: node-1
+                  type: input
+                  x: -707.657782047897
+                  y: 286.90730237857326
+                  content: Perform an etymology study in the subject instructed.
+                  inputs:
+                    - node-2
+                - id: node-2
+                  type: static
+                  x: -1068.591302854271
+                  y: 288.0614877111369
+                  content: Ontology
+                  outputs:
+                    - node-1
+            - id: machine-2
+              nodes:
+                - id: node-3
+                  type: input
+                  x: -213.9069986642785
+                  y: -336.83275883885347
+                  content: History
+                  inputs:
+                    - machine-1
+                  outputs:
+                    - node-4
+                - id: node-4
+                  type: ai
+                  x: 93.58686771943871
+                  y: -355.77039468601913
+                  content: 'The term ontology is a Modern Latin coinage, *ontologia*, created in
+                    the 17th century. It is derived from two Ancient Greek
+                    roots: *on* (ὄν), which is the present participle of the
+                    verb *eînai* (εἶναι), meaning "to be," and its genitive form
+                    *ontos* (ὄντος), meaning "of being" or "of that which is."
+                    This is combined with the suffix *-logia* (-λογία), which
+                    denotes "study of," "discourse," or "science." Therefore,
+                    the literal etymological meaning of ontology is "the study
+                    of being" or "the science of existence." The term was first
+                    used in philosophical texts in the early 1600s and was later
+                    popularized by the German philosopher Christian Wolff.'
+                  inputs:
+                    - node-3
+            - id: machine-3
+              nodes:
+                - id: node-5
+                  type: input
+                  x: -273.5327699471343
+                  y: 453.0488189510876
+                  content: Prefix and Suffix
+                  inputs:
+                    - machine-1
+                  outputs:
+                    - node-6
+                - id: node-6
+                  type: ai
+                  x: 55.376717821441844
+                  y: 452.6449025275914
+                  content: The term ontology is derived from Ancient Greek. The prefix "onto-"
+                    comes from the Greek ὄν (on), genitive ὄντος (ontos),
+                    meaning "being" or "that which is." The suffix "-logy" comes
+                    from the Greek -λογία (-logia), meaning "study of" or
+                    "science of," which is derived from λόγος (logos), meaning
+                    "word, reason, or discourse." Therefore, the etymology of
+                    ontology is the "study of being" or the "science of
+                    existence."
+                  inputs:
+                    - node-5
+            - id: machine-4
+              nodes:
+                - id: node-7
+                  type: input
+                  x: -258.424018449771
+                  y: 955.7703946860191
+                  content: Original Language Breakdown
+                  inputs:
+                    - machine-1
+                  outputs:
+                    - node-8
+                - id: node-8
+                  type: ai
+                  x: 68.90267437178386
+                  y: 954.3727031328366
+                  content: >-
+                    The term "ontology" is derived from two Greek roots.
+
+
+                    The first part, "onto-", comes from the Greek word ὄν (on),
+                    which is the present participle of the verb εἶναι (einai),
+                    meaning "to be". The genitive form is ὄντος (ontos), meaning
+                    "of being" or "of that which is."
+
+
+                    The second part, "-logy", comes from the Greek -λογία
+                    (-logia), which means "the study of," "discourse," or
+                    "science." This suffix is derived from the word λόγος
+                    (logos), meaning "word," "reason," or "speech."
+
+
+                    Combined, the original language breakdown of ontology
+                    literally means "the study of being" or "the science of
+                    existence."
+                  inputs:
+                    - node-7
+        - id: factory-4
+          machines:
+            - id: machine-5
+              nodes:
+                - id: node-9
+                  type: input
+                  x: 602.4122363437943
+                  y: 392.8701489971113
+                  content: Combine all studies into a compiled word study.
+                  inputs:
+                    - factory-3
+                  outputs:
+                    - node-10
+                - id: node-10
+                  type: text_file_output
+                  x: 921.0693562305971
+                  y: 351.72514951548396
+                  file_path: ./output/Temperature.md
+                  inputs:
+                    - node-9
+            - id: machine-6
+              nodes:
+                - id: node-11
+                  type: input
+                  x: 1655.0114194249072
+                  y: 363.89803457687674
+                  content: Expand on the document with additional useful information.
+                  inputs:
+                    - machine-5
+                  outputs:
+                    - node-12
+                - id: node-12
+                  type: text_file_output
+                  x: 1989.0151949544638
+                  y: 332.09387150268105
+                  file_path: ./output/Temperature.md
+                  inputs:
+                    - node-11

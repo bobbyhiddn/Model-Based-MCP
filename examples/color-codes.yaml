@@ -1,0 +1,100 @@
+canvas:
+  version: "2.0"
+  created: 1757966540734
+  networks:
+    - id: network-3
+      factories:
+        - id: factory-1
+          machines:
+            - id: machine-1
+              nodes:
+                - id: node-1
+                  type: input
+                  x: 205.1999969482422
+                  y: 218
+                  content: The code word is blue.
+                  outputs:
+                    - node-2
+                - id: node-2
+                  type: ai
+                  x: 641.1333312988281
+                  y: 245.02857171921505
+                  content: blue
+                  inputs:
+                    - node-1
+            - id: machine-2
+              nodes:
+                - id: node-3
+                  type: input
+                  x: 984.6467618769294
+                  y: 567.0844145409826
+                  content: Another code word is red.
+                  outputs:
+                    - node-4
+                - id: node-4
+                  type: ai
+                  x: 1452.940629712438
+                  y: 411.6423323602885
+                  content: The code words are blue and red.
+                  inputs:
+                    - machine-1
+                    - node-3
+        - id: factory-2
+          machines:
+            - id: machine-3
+              nodes:
+                - id: node-5
+                  type: input
+                  x: 2303.1952857672745
+                  y: 222.05640015490926
+                  content: List all code words.
+                  inputs:
+                    - factory-1
+                    - node-6
+                  outputs:
+                    - node-7
+                - id: node-6
+                  type: input
+                  x: 1855.3239393483648
+                  y: -169.591089887919
+                  content: Another code word is green.
+                  outputs:
+                    - node-5
+                - id: node-7
+                  type: ai
+                  x: 2667.851238853564
+                  y: 218.74736923258573
+                  content: |-
+                    blue
+                    green
+                  inputs:
+                    - node-5
+                    - node-8
+                - id: node-8
+                  type: input
+                  x: 2165.7219992168602
+                  y: 606.7624540649709
+                  content: The red code word is a lie.
+                  outputs:
+                    - node-7
+            - id: machine-4
+              nodes:
+                - id: node-9
+                  type: ai
+                  x: 3386.148715457771
+                  y: 203.25601020700034
+                  content: |-
+                    Blue and green are true,
+                    The color red was a lie,
+                    Only two remain.
+                  inputs:
+                    - node-10
+                - id: node-10
+                  type: input
+                  x: 3014.0608881502017
+                  y: 227.232642161057
+                  content: Write a haiku about the code words.
+                  inputs:
+                    - machine-3
+                  outputs:
+                    - node-9

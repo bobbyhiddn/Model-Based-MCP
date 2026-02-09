@@ -1,0 +1,109 @@
+canvas:
+  version: "2.0"
+  created: 1757968373469
+  networks:
+    - id: network-2
+      factories:
+        - id: factory-2
+          machines:
+            - id: machine-1
+              nodes:
+                - id: node-1
+                  type: static
+                  x: -1200
+                  y: 300
+                  content: "Project: New mobile app launch. Timeline: 3 months. Team: 5
+                    developers, 2 designers. Budget: $500K. Status: Design 80%
+                    complete, Development 30% complete, 6 weeks remaining."
+                  outputs:
+                    - node-2
+                - id: node-2
+                  type: input
+                  x: -800
+                  y: 300
+                  content: Identify the top 3 risks in this project based on the current status
+                  inputs:
+                    - node-1
+                  outputs:
+                    - node-3
+                - id: node-3
+                  type: ai
+                  x: -400
+                  y: 300
+                  content: ""
+                  inputs:
+                    - node-2
+            - id: machine-2
+              nodes:
+                - id: node-4
+                  type: input
+                  x: 0
+                  y: 300
+                  content: For each risk identified, calculate probability (High/Medium/Low) and
+                    impact (Critical/Major/Minor)
+                  inputs:
+                    - machine-1
+                  outputs:
+                    - node-5
+                - id: node-5
+                  type: ai
+                  x: 400
+                  y: 300
+                  content: ""
+                  inputs:
+                    - node-4
+            - id: machine-3
+              nodes:
+                - id: node-6
+                  type: input
+                  x: 800
+                  y: 300
+                  content: Generate specific mitigation strategies for each risk
+                  inputs:
+                    - machine-2
+                  outputs:
+                    - node-7
+                - id: node-7
+                  type: ai
+                  x: 1200
+                  y: 300
+                  content: ""
+                  inputs:
+                    - node-6
+      machines:
+        - id: machine-4
+          nodes:
+            - id: node-8
+              type: input
+              x: 1600
+              y: 200
+              content: Create a go/no-go recommendation based on the risk analysis
+              inputs:
+                - factory-2
+              outputs:
+                - node-9
+            - id: node-9
+              type: ai
+              x: 2000
+              y: 200
+              content: ""
+              inputs:
+                - node-8
+        - id: machine-5
+          nodes:
+            - id: node-10
+              type: input
+              x: 1600
+              y: 400
+              content: Generate an executive summary for stakeholders
+              inputs:
+                - factory-2
+              outputs:
+                - node-11
+            - id: node-11
+              type: ai
+              x: 2000
+              y: 400
+              content: ""
+              inputs:
+                - node-10
