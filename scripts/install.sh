@@ -26,10 +26,10 @@ set -euo pipefail
 # Configuration
 # ---------------------------------------------------------------------------
 PAPYRUS_VERSION="7.1.0"
-PAPYRUS_BUILD="R202511140953"
-PAPYRUS_URL="https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/drops/${PAPYRUS_VERSION}/${PAPYRUS_BUILD}/Papyrus-Desktop-Main-${PAPYRUS_VERSION}.zip"
+PAPYRUS_RELEASE="2025-06"
+PAPYRUS_URL="https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/rcp/${PAPYRUS_RELEASE}/${PAPYRUS_VERSION}/papyrus-desktop-${PAPYRUS_RELEASE}-${PAPYRUS_VERSION}-linux.gtk.x86_64.tar.gz"
 PAPYRUS_DIR="$HOME/Apps/Papyrus-Desktop"
-PAPYRUS_ARCHIVE="Papyrus-Desktop-Main-${PAPYRUS_VERSION}.zip"
+PAPYRUS_ARCHIVE="papyrus-desktop-${PAPYRUS_RELEASE}-${PAPYRUS_VERSION}-linux.gtk.x86_64.tar.gz"
 
 SYSON_VERSION="v2026.1.0"
 SYSON_IMAGE="eclipsesyson/syson:${SYSON_VERSION}"
@@ -192,7 +192,10 @@ if ! dpkg --configure -a --dry-run &>/dev/null 2>&1 || \
     echo ""
     info "To fix, run:  sudo apt --fix-broken install"
     echo ""
-    if ! $DRY_RUN; then
+    if $DRY_RUN; then
+        dry "sudo apt --fix-broken install"
+    elif [[ -t 0 ]]; then
+        # Interactive terminal — prompt user
         read -rp "$(echo -e "${YELLOW}Run 'sudo apt --fix-broken install' now? [y/N] ${NC}")" FIX_APT
         if [[ "${FIX_APT,,}" == "y" ]]; then
             info "Running apt --fix-broken install..."
@@ -202,7 +205,10 @@ if ! dpkg --configure -a --dry-run &>/dev/null 2>&1 || \
             warn "Continuing without repair — package installs may fail."
         fi
     else
-        dry "sudo apt --fix-broken install"
+        # Non-interactive (piped, cron, redirected) — skip prompt, warn and continue
+        warn "Running non-interactively — skipping apt repair prompt."
+        warn "Fix manually with: sudo apt --fix-broken install"
+        warn "Continuing — package installs may fail."
     fi
 fi
 
@@ -241,32 +247,32 @@ else
     run mkdir -p "$HOME/Apps"
 
     if $DRY_RUN; then
-        dry "Download $PAPYRUS_URL (~195MB)"
+        dry "Download $PAPYRUS_URL (~760MB)"
         dry "Extract to $PAPYRUS_DIR"
     else
         TMPDIR=$(mktemp -d)
         ARCHIVE="$TMPDIR/$PAPYRUS_ARCHIVE"
 
-        # Download with progress (195MB file — use retries and generous timeout)
-        info "File is ~195MB — this may take a few minutes..."
-        if ! wget --timeout=60 --tries=3 --continue -q --show-progress -O "$ARCHIVE" "$PAPYRUS_URL"; then
+        # Download with progress (760MB RCP product — use retries and generous timeout)
+        info "File is ~760MB — this may take several minutes..."
+        if ! wget --timeout=120 --tries=3 --continue -q --show-progress -O "$ARCHIVE" "$PAPYRUS_URL"; then
             err "Download failed after 3 attempts."
             err "Current URL: $PAPYRUS_URL"
             err "Check: https://eclipse.dev/papyrus/download.html"
-            err "Or browse: https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/drops/"
+            err "Or browse: https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/rcp/"
             info "You can also download manually:"
-            info "  wget -O /tmp/papyrus.zip '$PAPYRUS_URL'"
-            info "  unzip /tmp/papyrus.zip -d ~/Apps/"
+            info "  wget -O /tmp/papyrus.tar.gz '$PAPYRUS_URL'"
+            info "  tar xzf /tmp/papyrus.tar.gz -C ~/Apps/"
             info "  mv ~/Apps/eclipse ~/Apps/Papyrus-Desktop"
             err "Continuing with remaining installations..."
             rm -rf "$TMPDIR"
         else
             ok "Download complete ($(du -h "$ARCHIVE" | cut -f1))"
 
-            # Extract — Papyrus Desktop zip contains an "eclipse/" directory
+            # Extract — RCP tar.gz contains an "eclipse/" directory with the full desktop app
             info "Extracting to $PAPYRUS_DIR..."
             mkdir -p "$HOME/Apps"
-            unzip -qo "$ARCHIVE" -d "$HOME/Apps/"
+            tar xzf "$ARCHIVE" -C "$HOME/Apps/"
 
             # The archive extracts as "eclipse/" — rename to Papyrus-Desktop
             if [[ -d "$HOME/Apps/eclipse" && ! -d "$PAPYRUS_DIR" ]]; then
