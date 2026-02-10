@@ -26,10 +26,10 @@ set -euo pipefail
 # Configuration
 # ---------------------------------------------------------------------------
 PAPYRUS_VERSION="7.1.0"
-PAPYRUS_RELEASE="2025-06"
-PAPYRUS_URL="https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/releases/${PAPYRUS_RELEASE}/papyrus-desktop-${PAPYRUS_VERSION}-linux.gtk.x86_64.tar.gz"
+PAPYRUS_BUILD="R202511140953"
+PAPYRUS_URL="https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/drops/${PAPYRUS_VERSION}/${PAPYRUS_BUILD}/Papyrus-Desktop-Main-${PAPYRUS_VERSION}.zip"
 PAPYRUS_DIR="$HOME/Apps/Papyrus-Desktop"
-PAPYRUS_TARBALL="papyrus-desktop-${PAPYRUS_VERSION}.tar.gz"
+PAPYRUS_ARCHIVE="Papyrus-Desktop-Main-${PAPYRUS_VERSION}.zip"
 
 SYSON_VERSION="v2026.1.0"
 SYSON_IMAGE="eclipsesyson/syson:${SYSON_VERSION}"
@@ -48,6 +48,7 @@ APT_PACKAGES=(
     libswt-gtk-4-jni
     xdg-utils
     libcanberra-gtk3-module
+    unzip
 )
 
 # UV binary location (Micah's standard)
@@ -244,29 +245,29 @@ else
         dry "Extract to $PAPYRUS_DIR"
     else
         TMPDIR=$(mktemp -d)
-        TARBALL="$TMPDIR/$PAPYRUS_TARBALL"
+        ARCHIVE="$TMPDIR/$PAPYRUS_ARCHIVE"
 
         # Download with progress
-        if ! wget -q --show-progress -O "$TARBALL" "$PAPYRUS_URL"; then
+        if ! wget -q --show-progress -O "$ARCHIVE" "$PAPYRUS_URL"; then
             err "Download failed. The URL may have changed."
+            err "Current URL: $PAPYRUS_URL"
             err "Check: https://eclipse.dev/papyrus/download.html"
+            err "Or browse: https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/drops/"
             err "Continuing with remaining installations..."
             rm -rf "$TMPDIR"
         else
-            ok "Download complete ($(du -h "$TARBALL" | cut -f1))"
+            ok "Download complete ($(du -h "$ARCHIVE" | cut -f1))"
 
-            # Extract — Papyrus archives extract to "eclipse/" directory
+            # Extract — Papyrus Desktop zip contains an "eclipse/" directory
             info "Extracting to $PAPYRUS_DIR..."
-            mkdir -p "$PAPYRUS_DIR"
-            tar xzf "$TARBALL" -C "$HOME/Apps/"
+            mkdir -p "$HOME/Apps"
+            unzip -qo "$ARCHIVE" -d "$HOME/Apps/"
 
-            # The archive extracts as "eclipse/" — rename if needed
+            # The archive extracts as "eclipse/" — rename to Papyrus-Desktop
             if [[ -d "$HOME/Apps/eclipse" && ! -d "$PAPYRUS_DIR" ]]; then
                 mv "$HOME/Apps/eclipse" "$PAPYRUS_DIR"
             elif [[ -d "$HOME/Apps/eclipse" && -d "$PAPYRUS_DIR" ]]; then
-                # eclipse/ extracted but Papyrus-Desktop already exists somehow
-                # Merge — the tar likely extracted INTO Papyrus-Desktop if we mkdir'd it
-                # Actually let's just move the contents
+                # Merge contents into existing directory
                 cp -rn "$HOME/Apps/eclipse/"* "$PAPYRUS_DIR/" 2>/dev/null || true
                 rm -rf "$HOME/Apps/eclipse"
             fi
