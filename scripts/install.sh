@@ -241,18 +241,23 @@ else
     run mkdir -p "$HOME/Apps"
 
     if $DRY_RUN; then
-        dry "Download $PAPYRUS_URL"
+        dry "Download $PAPYRUS_URL (~195MB)"
         dry "Extract to $PAPYRUS_DIR"
     else
         TMPDIR=$(mktemp -d)
         ARCHIVE="$TMPDIR/$PAPYRUS_ARCHIVE"
 
-        # Download with progress
-        if ! wget -q --show-progress -O "$ARCHIVE" "$PAPYRUS_URL"; then
-            err "Download failed. The URL may have changed."
+        # Download with progress (195MB file — use retries and generous timeout)
+        info "File is ~195MB — this may take a few minutes..."
+        if ! wget --timeout=60 --tries=3 --continue -q --show-progress -O "$ARCHIVE" "$PAPYRUS_URL"; then
+            err "Download failed after 3 attempts."
             err "Current URL: $PAPYRUS_URL"
             err "Check: https://eclipse.dev/papyrus/download.html"
             err "Or browse: https://download.eclipse.org/modeling/mdt/papyrus/papyrus-desktop/downloads/drops/"
+            info "You can also download manually:"
+            info "  wget -O /tmp/papyrus.zip '$PAPYRUS_URL'"
+            info "  unzip /tmp/papyrus.zip -d ~/Apps/"
+            info "  mv ~/Apps/eclipse ~/Apps/Papyrus-Desktop"
             err "Continuing with remaining installations..."
             rm -rf "$TMPDIR"
         else
